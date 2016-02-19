@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_extensions',
     'test_without_migrations',
+    'rest_framework',
     'csopen.core',
 ]
 
