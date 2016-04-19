@@ -23,7 +23,7 @@ urlpatterns = [
     url(r'^$', home),
     url(r'^admin/', admin.site.urls),
     url(r'^api/', include('csopen.core.urls')),
-    # url(r'^suppliers/$', SupplierView),
+
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)

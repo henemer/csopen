@@ -1,93 +1,93 @@
 from csopen.core.models import Supplier, Customer
 from csopen.core.serializers import SupplierSerializer, CustomerSerializer
+from django.db.models import Max
 from django.shortcuts import render
-from rest_framework import status
-from rest_framework.decorators import api_view, parser_classes
+from rest_framework import status, generics, filters, mixins
+from rest_framework.decorators import api_view
+from rest_framework.generics import RetrieveUpdateDestroyAPIView, ListCreateAPIView
 from rest_framework.parsers import JSONParser
 from rest_framework.response import Response
+from rest_framework.viewsets import ModelViewSet
 
 
 def home(request):
     return render(request, 'index.html')
 
-class SupplierView:
-    @api_view(['GET', 'POST'])
-    def supplier_list(request, format=None):
-        if request.method== 'GET':
-            suppliers = Supplier.objects.all()
-            serializer = SupplierSerializer(suppliers, many=True)
-            return Response(serializer.data)
-        elif request.method == 'POST':
-            supplier = SupplierSerializer(data=request.data)
-            if supplier.is_valid():
-                supplier.save()
-                return Response(supplier.data, status=status.HTTP_201_CREATED)
-            return Response(supplier.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    @api_view(['GET', 'PUT', 'DELETE'])
-    def supplier_detail(request, pk, format=None):
-        """
-        Retrieve, update or delete a supplier instance.
-        """
-        try:
-            supplier = Supplier.objects.get(pk=pk)
-        except Supplier.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+class CustomerGetPutDeleteView(RetrieveUpdateDestroyAPIView):
+    serializer_class = CustomerSerializer
+    queryset = Customer.objects.all()
 
-        if request.method == 'GET':
-            serializer = SupplierSerializer(supplier)
-            return Response(serializer.data)
+    def delete(self, request, *args, **kwargs):
+        self.destroy(request, *args, **kwargs)
+        return Response('Ok', status=status.HTTP_200_OK)
 
-        elif request.method == 'PUT':
-            serializer = SupplierSerializer(supplier, data=request.data)
-            if serializer.is_valid():
-                serializer.save()
-                return Response(serializer.data)
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-        elif request.method == 'DELETE':
-            supplier.delete()
-            return Response(status=status.HTTP_204_NO_CONTENT)
-
-class CustomerView:
-    @api_view(['GET', 'POST'])
-    @parser_classes((JSONParser,))
-    def customer_list(request, format=None):
-        if request.method== 'GET':
-            customers = Customer.objects.all()
-            serializer = CustomerSerializer(customers, many=True)
-            return Response(serializer.data)
-        elif request.method == 'POST':
-         #   return Response({'received data': request.data})
-            customer = CustomerSerializer(data=request.data)
-            if customer.is_valid():
-                customer.save()
-                return Response(customer.data, status=status.HTTP_201_CREATED)
-            else:
-                return Response(customer.errors, status=status.HTTP_400_BAD_REQUEST)
+class CustomerPostListView(ListCreateAPIView):
+    queryset = Customer.objects.all()
+    serializer_class = CustomerSerializer
+    filter_backends = [filters.DjangoFilterBackend,]
+    filter_fields =   {'code': ['exact'],
+                       'name': ['icontains'],
+                       'nickname': ['icontains'],
+                      }
 
 
-    @api_view(['GET', 'PUT', 'DELETE'])
-    def customer_detail(request, pk, format=None):
-        """
-        Retrieve, update or delete a customer instance.
-        """
-        try:
-            customer = Customer.objects.get(pk=pk)
-        except Customer.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+class CustomerGetMaxCode(ModelViewSet):
+    @api_view(['GET'])
+    def getCode(request):
+        code = Customer.objects.all().aggregate(Max('code'))
+        if code['code__max'] == None:
+            maxCode = 1
+        else:
+            maxCode = code['code__max'] + 1
+        return Response(maxCode)
 
-        if request.method == 'GET':
-            serializer = CustomerSerializer(customer)
-            return Response(serializer.data)
 
-        elif request.method == 'PUT':
-            serializer = CustomerSerializer(customer, data=request.data)
-            if serializer.is_valid():
-                serializer.save()
-                return Response(serializer.data)
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+class CustomerCodeExists():
+    @api_view(['GET'])
+    def codeExists(request, id, code):
+        result =  Customer.objects.exclude(id=id).filter(code=code)
+        if not result:
+            return Response(False)
 
-        elif request.method == 'DELETE':
-            customer.delete()
-            return Response({'ok'}, status=status.HTTP_200_OK)
+        return Response(True)
+
+
+
+class SupplierGetPutDeleteView(RetrieveUpdateDestroyAPIView):
+    serializer_class = SupplierSerializer
+    queryset = Supplier.objects.all()
+
+    def delete(self, request, *args, **kwargs):
+        self.destroy(request, *args, **kwargs)
+        return Response('Ok', status=status.HTTP_200_OK)
+
+class SupplierPostListView(ListCreateAPIView):
+    queryset = Supplier.objects.all()
+    serializer_class = SupplierSerializer
+    filter_backends = [filters.DjangoFilterBackend,]
+    filter_fields =   {'code': ['exact'],
+                       'name': ['icontains'],
+                       'trade': ['icontains'],
+                      }
+
+
+class SupplierGetMaxCode(ModelViewSet):
+    @api_view(['GET'])
+    def getCode(request):
+        code = Supplier.objects.all().aggregate(Max('code'))
+        if code['code__max'] == None:
+            maxCode = 1
+        else:
+            maxCode = code['code__max'] + 1
+        return Response(maxCode)
+
+
+class SupplierCodeExists():
+    @api_view(['GET'])
+    def codeExists(request, id, code):
+        result =  Supplier.objects.exclude(id=id).filter(code=code)
+        if not result:
+            return Response(False)
+
+        return Response(True)
