@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'test_without_migrations',
     'rest_framework',
     'csopen.core',
+    'corsheaders',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -54,6 +55,8 @@ MIDDLEWARE_CLASSES = [
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
 ]
 
 ROOT_URLCONF = 'csopen.urls'
@@ -133,3 +136,7 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_FILTER_BACKENDS': ('rest_framework.filters.DjangoFilterBackend',)
 }
+
+CORS_ORIGIN_WHITELIST = (
+    'app.csopen.com.br',
+)
