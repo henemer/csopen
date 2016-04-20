@@ -6,5 +6,6 @@ O sistema CSOpen é indicado para pequenos comércios e prestadores de serviço 
 
 ## Como testar ? 
 
-TO DO...
+Uma versão de demonstação do sistema pode ser acessada em http://app.csopen.com.br 
+
 
