@@ -5,7 +5,7 @@ from csopen.core.models import Supplier, Customer
 class SupplierSerializer(serializers.ModelSerializer):
     class Meta:
         model = Supplier
-        fields = ('code', 'company', 'trade', 'cnpj', 'observations')
+        fields = ('id','code', 'company', 'trade', 'cnpj', 'observations')
 
 
 class CustomerSerializer(serializers.ModelSerializer):

@@ -67,7 +67,7 @@ class SupplierPostListView(ListCreateAPIView):
     serializer_class = SupplierSerializer
     filter_backends = [filters.DjangoFilterBackend,]
     filter_fields =   {'code': ['exact'],
-                       'name': ['icontains'],
+                       'company': ['icontains'],
                        'trade': ['icontains'],
                       }
 
