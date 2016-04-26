@@ -37,20 +37,3 @@ class SupplierModelTest(TestCase):
         self.obj.save()
         with self.assertRaises(IntegrityError):
             supplier2.save()
-
-
-    def test_supplier_code_exists(self):
-        self.obj.save();
-
-        client = APIClient()
-        response = client.get('/api/fornecedores/codeexists/0/1', format='json')
-        self.assertEqual(response.data, True)
-
-
-    def test_supplier_next_code(self):
-        self.obj.save()
-        client = APIClient()
-
-        response = client.get('/api/fornecedores/getmaxcode/', format='json')
-
-        self.assertEqual(2, response.data)

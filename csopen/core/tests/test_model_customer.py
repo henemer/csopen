@@ -41,18 +41,3 @@ class CustomerModelTest(TestCase):
             customer2.save()
 
 
-    def test_customer_code_exists(self):
-        self.obj.save();
-
-        client = APIClient()
-        response = client.get('/api/clientes/codeexists/0/1', format='json')
-        self.assertEqual(response.data, True)
-
-
-    def test_customer_next_code(self):
-        self.obj.save()
-        client = APIClient()
-
-        response = client.get('/api/clientes/getmaxcode/', format='json')
-
-        self.assertEqual(2, response.data)
