@@ -1,5 +1,5 @@
-from csopen.core.models import Supplier, Customer
-from csopen.core.serializers import SupplierSerializer, CustomerSerializer
+from csopen.core.models import Supplier, Customer, Product
+from csopen.core.serializers import SupplierSerializer, CustomerSerializer, ProductSerializer
 from django.db.models import Max
 from django.shortcuts import render
 from rest_framework import status, generics, filters, mixins
@@ -87,6 +87,33 @@ class SupplierCodeExists():
     @api_view(['GET'])
     def codeExists(request, id, code):
         result =  Supplier.objects.exclude(id=id).filter(code=code)
+        if not result:
+            return Response(False)
+
+        return Response(True)
+
+class ProductGetPutDeleteView(RetrieveUpdateDestroyAPIView):
+    serializer_class = ProductSerializer
+    queryset = Product.objects.all()
+
+    def delete(self, request, *args, **kwargs):
+        self.destroy(request, *args, **kwargs)
+        return Response('Ok', status=status.HTTP_200_OK)
+
+class ProductPostListView(ListCreateAPIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+    filter_backends = [filters.DjangoFilterBackend,]
+    filter_fields =   {'code': ['exact'],
+                       'description': ['icontains'],
+                       'reference': ['icontains'],
+                      }
+
+
+class ProductCodeExists():
+    @api_view(['GET'])
+    def codeExists(request, id, code):
+        result =  Product.objects.exclude(id=id).filter(code=code)
         if not result:
             return Response(False)
 

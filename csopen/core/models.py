@@ -41,5 +41,24 @@ class Customer(models.Model):
         verbose_name_plural = 'clientes'
 
 
+class Product(models.Model):
+    code = models.CharField('código', max_length=15, unique=True,
+                               error_messages = {  'unique': 'Esse código já está sendo usado por outro produto, tente outro código'})
+    description = models.CharField('descrição', max_length=50)
+    unity = models.CharField('unidade',max_length=3, blank=True)
+    cost_price = models.DecimalField('preço de custo', max_digits=18, decimal_places=4, default=0)
+    profit_margin = models.DecimalField('margem de lucro', max_digits=7, decimal_places=4, default=0)
+    price = models.DecimalField('preço de venda', max_digits=18, decimal_places=2, default=0)
+    amount = models.DecimalField('quantidade', max_digits=18, decimal_places=3, default=0)
+    reference = models.CharField('referência', max_length=20, blank=True)
+    max_stock = models.DecimalField('estoque máximo', max_digits=18, decimal_places=3, default=0)
+    min_stock = models.DecimalField('estoque mínimo', max_digits=18, decimal_places=3, default=0)
+    bar_code = models.CharField('codigo de barras', max_length=14, blank=True)
+    ncm = models.CharField('NCM', max_length=8, blank=True)
+    observations = models.TextField('observaçẽos', blank=True)
+    created_at = models.DateTimeField('created_at', auto_now_add=True)
 
+    class Meta:
+        verbose_name = 'produto'
+        verbose_name_plural = 'produtos'
 

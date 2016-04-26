@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from csopen.core.models import Supplier, Customer
+from csopen.core.models import Supplier, Customer, Product
 
 
 class SupplierSerializer(serializers.ModelSerializer):
@@ -17,5 +17,9 @@ class CustomerSerializer(serializers.ModelSerializer):
                   'complement', 'observations')
 
 
+class ProductSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Product
+        fields =  '__all__'
 
 
