@@ -134,7 +134,8 @@ REST_FRAMEWORK = {
     'DEFAULT_PARSER_CLASSES': (
         'rest_framework.parsers.JSONParser',
     ),
-    'DEFAULT_FILTER_BACKENDS': ('rest_framework.filters.DjangoFilterBackend',)
+    'DEFAULT_FILTER_BACKENDS': ('rest_framework.filters.DjangoFilterBackend',),
+    'COERCE_DECIMAL_TO_STRING':False # Não transforma os campos decimals em string no JSON.
 }
 
 CORS_ORIGIN_ALLOW_ALL = True

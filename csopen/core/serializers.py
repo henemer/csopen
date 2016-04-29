@@ -22,4 +22,6 @@ class ProductSerializer(serializers.ModelSerializer):
         model = Product
         fields =  '__all__'
 
+        price = serializers.DecimalField(max_digits=5, decimal_places=2)
+
 

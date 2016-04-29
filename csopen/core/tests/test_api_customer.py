@@ -68,7 +68,7 @@ class CustomerModelTest(TestCase):
 
         self.assertContains(response, 'Emerson Henning')
 
-    
+
     def test_customer_code_exists(self):
         self.obj.save();
 
